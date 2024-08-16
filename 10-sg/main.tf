@@ -8,7 +8,7 @@ module "db" {
     sg_name = "db"
 }
 module "ingress" {
-    source = "git:::https://github.com/daws-78s/terraform-aws-securitygroup.git?ref=main"
+    source = "git::https://github.com/daws-78s/11.terraform-aws-securitygroup.git?ref=main"
     project_name = var.project_name
     environment = var.environment
     sg_description = "SG for Ingress Controller"
@@ -17,7 +17,7 @@ module "ingress" {
     sg_name = "ingress"
 }
 module "cluster" {
-    source = "git:::https://github.com/daws-78s/terraform-aws-securitygroup.git?ref=main"
+    source = "git::https://github.com/daws-78s/11.terraform-aws-securitygroup.git?ref=main"
     project_name = var.project_name
     environment = var.environment
     sg_description = "SG for EKS Control Plane"
@@ -26,7 +26,7 @@ module "cluster" {
     sg_name = "eks-control-plane"
 }
 module "node" {
-    source = "git:::https://github.com/daws-78s/terraform-aws-securitygroup.git?ref=main"
+    source = "git::https://github.com/daws-78s/11.terraform-aws-securitygroup.git?ref=main"
     project_name = var.project_name
     environment = var.environment
     sg_description = "SG for EKS node"
