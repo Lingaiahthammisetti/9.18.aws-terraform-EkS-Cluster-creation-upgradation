@@ -4,9 +4,9 @@ resource "aws_lb" "ingress_alb" {
     name = "${var.project_name}-${var.environment}-ingress-alb"
     internal =  false #public ALB
     load_balancer_type = "application"
-    security_groups  = [data.aws_ssm_parameter.ingress_alb_sg_id.value]
+    security_groups  = [data.aws_ssm_parameter.ingress_sg_id.value]
 
-    subnets = split(",", data.aws_ssm_parameter.ingress_alb_sg_id.value)
+    subnets = split(",", data.aws_ssm_parameter.public_subnet_ids.value)
     enable_deletion_protection = false
 
     tags = merge(
@@ -17,7 +17,7 @@ resource "aws_lb" "ingress_alb" {
     )
 }
 resource "aws_lb_listener" "http" {
-    load_balancer_arn = aws_lb.app_alb.arn
+    load_balancer_arn = aws_lb.ingress_alb.arn
     port              = "80"
     protocol          = "HTTP"
     default_action {
@@ -58,13 +58,13 @@ resource "aws_lb_target_group" "frontend" {
         path        = "/"
         port        = 8080
         protocol    = "HTTP"
-        health_threshold  = 2
-        unhealth_threshold  = 2
+        healthy_threshold  = 2
+        unhealthy_threshold  = 2
         matcher             = "200"
 
         }
-    }
 }
+
 
 resource "aws_lb_listener_rule" "frontend" {
     listener_arn = aws_lb_listener.https.arn
@@ -77,7 +77,7 @@ resource "aws_lb_listener_rule" "frontend" {
     condition {
         host_header {
             # expense-dev.daws78s.online ---> frontend pod
-            values = ["expense=${var.environment}.${var.zone_id}"]
+            values = ["expense-${var.environment}.${var.zone_name}"]
         }
     }
 }

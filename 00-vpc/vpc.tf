@@ -1,8 +1,9 @@
 module "vpc" {
 
-    #source = "../7.terraform-aws-vpc"
+    #source = "../../7.1.terraform-aws-vpc-peering"
+    source = "git::https://github.com/linga-daws-78s/7.1.terraform-aws-vpc-peering.git?ref=main"
+    #Note: git and double colon (::) mandatory then github.com link and then ?ref=main
 
-    source = "git::https://github.com/linga-daws-78s/7.terraform-aws-vpc.git?ref=main"
     project_name = var.project_name
     common_tags = var.common_tags
     public_subnet_cidrs = var.public_subnet_cidrs

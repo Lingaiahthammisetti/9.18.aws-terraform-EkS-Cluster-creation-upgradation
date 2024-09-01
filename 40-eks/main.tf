@@ -2,7 +2,8 @@
 resource "aws_key_pair" "eks" {
     key_name = "eks"
     #you can paste the public key directly like this
-    public_key = file("~/.ssh/openssh.pub")
+    #public_key = file("~/.ssh/openssh.pub")
+     public_key = "${file("~/.ssh/openvpn.pub")}"
     # ~ means windows home directory
 }
 
