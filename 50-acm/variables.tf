@@ -9,13 +9,13 @@ variable "common_tags" {
         Project = "expense"
         Environment = "dev"
         Terraform = "true"
-        Component = "app-alb"
+        Component = "ingress-alb"
     }
 }
 variable "zone_name" {
     default = "lingaiah.online"
  }
  variable "zone_id" {
-    default ="zkletkjlrklerkjl"
+    default ="Z02765181CEB7C51AA89M"
 
   }

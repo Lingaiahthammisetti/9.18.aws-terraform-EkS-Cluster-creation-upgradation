@@ -7,7 +7,8 @@ variable "common_tags" {
     }
 }
 variable "sg_tags" {
-    default = "expense"
+    //default = "expense"
+    default = { }
 }
 variable "project_name" {
     default = "expense"

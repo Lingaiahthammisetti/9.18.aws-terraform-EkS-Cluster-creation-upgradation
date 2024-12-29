@@ -1,5 +1,3 @@
-
-
 resource "aws_acm_certificate" "expense" {
     domain_name = "*.lingaiah.online"
     validation_method = "DNS"
@@ -18,6 +16,7 @@ resource "aws_route53_record" "expense" {
             type = dvo.resource_record_type
         }
     }
+    
     allow_overwrite = true
     name = each.value.name
     records = [each.value.record]

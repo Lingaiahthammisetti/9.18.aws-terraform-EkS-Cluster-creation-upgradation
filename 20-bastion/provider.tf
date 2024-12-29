@@ -2,15 +2,14 @@ terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-       version = "~> 5.0"
+      version = "5.58.0"
     }
   }
-
 backend "s3" {
-  bucket = "lingadevops-remote-state"
-  key = "expense-dev-bastion"
+  bucket = "terraform-aws-eks-remote-state"
+  key = "terraform-aws-eks-bastion"
   region = "us-east-1"
-  dynamodb_table = "lingaiah-locking"
+  dynamodb_table = "terraform-aws-eks-remote-state-locking"
   }
 }
 

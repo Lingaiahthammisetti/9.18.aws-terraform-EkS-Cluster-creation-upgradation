@@ -1,14 +1,14 @@
-variable "project_name" {
-    default = "expense"
+variable  "project_name" {
+  default = "expense"
 }
 variable "environment" {
-    default = "dev"
+   default =  "dev"
 }
 variable "common_tags" {
+    type = map
     default = {
-        Project = "expense"
-        Environment = "dev"
         Terraform = "true"
+        Environment = "Dev"
+        Project = "expense"
     }
 }
-

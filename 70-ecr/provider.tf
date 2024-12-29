@@ -7,10 +7,10 @@ terraform {
   }
 
 backend "s3" {
-  bucket = "lingadevops-remote-state"
-  key = "expense-dev-ecr"
+  bucket = "terraform-aws-eks-remote-state"
+  key = "terraform-aws-eks-ecr"
   region = "us-east-1"
-  dynamodb_table = "lingaiah-locking"
+  dynamodb_table = "terraform-aws-eks-remote-state-locking"
   }
 }
 
