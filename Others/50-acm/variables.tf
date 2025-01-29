@@ -16,6 +16,6 @@ variable "zone_name" {
     default = "lingaiah.online"
  }
  variable "zone_id" {
-    default ="Z02765181CEB7C51AA89M"
+    default ="Z0618026OS8VQ3UG26YK"
 
   }

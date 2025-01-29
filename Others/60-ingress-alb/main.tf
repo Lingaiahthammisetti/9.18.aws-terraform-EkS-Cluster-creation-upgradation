@@ -6,13 +6,11 @@ resource "aws_lb" "ingress_alb" {
   subnets            = split(",",data.aws_ssm_parameter.public_subnet_ids.value)
 
   enable_deletion_protection = false
-    
     tags =merge(
         var.common_tags,
         {
             name ="${var.project_name}-${var.environment}-ingress-alb"
         }
-
     )
 }
 resource "aws_lb_listener" "http" {
