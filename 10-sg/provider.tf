@@ -12,7 +12,6 @@ backend "s3" {
   dynamodb_table = "terraform-aws-eks-remote-state-locking"
   }
 }
-
 provider "aws" {
   # Configuration options
   region = "us-east-1"
