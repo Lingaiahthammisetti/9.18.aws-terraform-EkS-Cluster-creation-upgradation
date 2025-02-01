@@ -117,7 +117,7 @@ resource "aws_security_group_rule" "db_bastion" {
     source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from.
     security_group_id = module.db.sg_id  
 }
-DB should accept connections from EKS nodes
+#DB should accept connections from EKS nodes
 resource "aws_security_group_rule" "db_node" {
     type = "ingress"
     from_port = 3306
