@@ -1,4 +1,3 @@
-
 module "bastion" {
     source  = "terraform-aws-modules/ec2-instance/aws"
     name ="${var.project_name}-${var.environment}-bastion"

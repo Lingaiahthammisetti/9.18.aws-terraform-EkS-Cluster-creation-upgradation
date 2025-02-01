@@ -1,4 +1,3 @@
-
 #This parameter is used in Security group creation
 resource "aws_ssm_parameter" "vpc_id" {
   name  = "/${var.project_name}/${var.environment}/vpc_id" # vpc will store its vpc id in SSM Parameter store.
