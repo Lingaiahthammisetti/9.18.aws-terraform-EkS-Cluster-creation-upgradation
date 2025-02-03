@@ -35,23 +35,13 @@ aws configure
 ```
 * get the kubernetes config using below command
 ```
-aws eks update-kubeconfig --region us-east-1 --name <YOUR-CLUSTER-NAME>
+aws eks update-kubeconfig --region us-east-1 --name expense-dev
 ```
 * Now you should be able to connect K8 cluster
 ```
 kubectl get nodes
 ```
 
-**RDS**:
-* Connect to RDS using bastion host.
-```
-mysql -h <DB-R53-ADRESS> -u root -pExpenseApp1
-```
-* We are creating schema while creating RDS. But table should be created.
-* Refer backend.sql to create
-    * Table
-    * User
-    * flush privileges
 
 **Ingress Controller**
 
@@ -59,11 +49,11 @@ Ref: https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.8/
 * Connect to K8 cluster from bastion host.
 * Create an IAM OIDC provider. You can skip this step if you already have one for your cluster.
 ```
-eksctl utils associate-iam-oidc-provider --region us-east-1 --cluster <your-cluster-name> --approve
+eksctl utils associate-iam-oidc-provider --region us-east-1 --cluster expense-dev --approve
 ```
 * Download an IAM policy for the LBC using one of the following commands:
 ```
-curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs aws-load-balancer-controller/v2.8.1/docs/install/iam_policy.json
+curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v2.8.2/docs/install/iam_policy.json
 ```
 
 * Create an IAM policy named AWSLoadBalancerControllerIAMPolicy. If you downloaded a different policy, replace iam-policy with the name of the policy that you downloaded.
@@ -75,11 +65,12 @@ aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-
 
 ```
 eksctl create iamserviceaccount \
---cluster=<cluster-name> \
+--cluster=expense-dev \
 --namespace=kube-system \
 --name=aws-load-balancer-controller \
---attach-policy-arn=arn:aws:iam::<AWS_ACCOUNT_ID>:policy/AWSLoadBalancerControllerIAMPolicy \
+--attach-policy-arn=arn:aws:iam::730335449147:policy/AWSLoadBalancerControllerIAMPolicy \
 --override-existing-serviceaccounts \
+--region us-east-1 \
 --approve
 ```
 
@@ -91,14 +82,11 @@ helm repo add eks https://aws.github.io/eks-charts
 * Helm install command for clusters with IRSA:
 
 ```
-helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=<cluster-name> --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=expense-dev
 ```
 
 * check aws-load-balancer-controller is running in kube-system namespace.
 ```
 kubectl get pods -n kube-system
 ```
-
-
-
 
