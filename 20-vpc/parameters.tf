@@ -22,9 +22,9 @@ resource "aws_ssm_parameter" "private_subnet_ids" {
   value = join(",",module.vpc.private_subnet_ids) # Converting String to StringList
 }
 
-# These are parameters useful for database server
-resource "aws_ssm_parameter" "db_subnet_group_name" { # vpc will store its db subnet group name in SSM Parameter store.
-  name  = "/${var.project_name}/${var.environment}/db_subnet_group_name"
-  type  = "String"
-  value =  module.vpc.database_subnet_group_name
-}
+# # These are parameters useful for database server
+# resource "aws_ssm_parameter" "db_subnet_group_name" { # vpc will store its db subnet group name in SSM Parameter store.
+#   name  = "/${var.project_name}/${var.environment}/db_subnet_group_name"
+#   type  = "String"
+#   value =  module.vpc.database_subnet_group_name
+# }

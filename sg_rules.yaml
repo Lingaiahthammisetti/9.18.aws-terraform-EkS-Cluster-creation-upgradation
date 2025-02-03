@@ -26,11 +26,6 @@
 
 
   sg:
-  - expense-dev-db
-  - expense-dev-backend
-  - expense-dev-app-alb
-  - expense-dev-frontend
-  - expense-dev-web-alb
   - expense-dev-bastion
   - expense-dev-vpn
   db:

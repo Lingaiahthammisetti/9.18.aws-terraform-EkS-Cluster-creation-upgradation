@@ -1,26 +1,26 @@
 #First creating security group with modules
 #Second attaching dependent ports to security group using aws Security group rule
 
-module "db" {
-source ="../../5.12.terraform-aws-securitygroup"
-#source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
-project_name = var.project_name
-environment =  var.environment
-sg_description = "SG for DB MySQL Instances"
-vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for DB Security group
-common_tags = var.common_tags
-sg_name = "db"
-}
-module "ingress" {
-source ="../../5.12.terraform-aws-securitygroup"
-#source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
-project_name = var.project_name
-environment =  var.environment
-sg_description = "SG for Ingress Controller"
-vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for Backend Security group
-common_tags = var.common_tags
-sg_name = "ingress"
-}
+# module "db" {
+# source ="../../5.12.terraform-aws-securitygroup"
+# #source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
+# project_name = var.project_name
+# environment =  var.environment
+# sg_description = "SG for DB MySQL Instances"
+# vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for DB Security group
+# common_tags = var.common_tags
+# sg_name = "db"
+# }
+# module "ingress" {
+# source ="../../5.12.terraform-aws-securitygroup"
+# #source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
+# project_name = var.project_name
+# environment =  var.environment
+# sg_description = "SG for Ingress Controller"
+# vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for Backend Security group
+# common_tags = var.common_tags
+# sg_name = "ingress"
+# }
 module "cluster" {
 source ="../../5.12.terraform-aws-securitygroup"
 #source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
@@ -51,17 +51,17 @@ vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SS
 common_tags = var.common_tags
 sg_name = "bastion"
 }
-module "vpn" {
-source ="../../5.12.terraform-aws-securitygroup"
-#source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
-project_name = var.project_name
-environment =  var.environment
-sg_description = "SG for VPN Instances"
-vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for Bastion Security group
-common_tags = var.common_tags
-ingress_rules   = var.vpn_sg_rules
-sg_name = "vpn"
-}
+# module "vpn" {
+# source ="../../5.12.terraform-aws-securitygroup"
+# #source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
+# project_name = var.project_name
+# environment =  var.environment
+# sg_description = "SG for VPN Instances"
+# vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for Bastion Security group
+# common_tags = var.common_tags
+# ingress_rules   = var.vpn_sg_rules
+# sg_name = "vpn"
+# }
 
 #Bastion can be accessed from public
 resource "aws_security_group_rule" "bastion_public" {
@@ -109,47 +109,47 @@ resource "aws_security_group_rule" "node_vpc" {
     security_group_id = module.node.sg_id  
 }
 #RDS accepting connections from bastion
-resource "aws_security_group_rule" "db_bastion" {
-    type = "ingress"
-    from_port = 3306
-    to_port =  3306
-    protocol = "tcp" # All traffic
-    source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from.
-    security_group_id = module.db.sg_id  
-}
+# resource "aws_security_group_rule" "db_bastion" {
+#     type = "ingress"
+#     from_port = 3306
+#     to_port =  3306
+#     protocol = "tcp" # All traffic
+#     source_security_group_id = module.bastion.sg_id # source is where you are getting traffic from.
+#     security_group_id = module.db.sg_id  
+# }
 #DB should accept connections from EKS nodes
-resource "aws_security_group_rule" "db_node" {
-    type = "ingress"
-    from_port = 3306
-    to_port =  3306
-    protocol = "tcp" # All traffic
-    source_security_group_id = module.node.sg_id # source is where you are getting traffic from.
-    security_group_id = module.db.sg_id  
-}
+# resource "aws_security_group_rule" "db_node" {
+#     type = "ingress"
+#     from_port = 3306
+#     to_port =  3306
+#     protocol = "tcp" # All traffic
+#     source_security_group_id = module.node.sg_id # source is where you are getting traffic from.
+#     security_group_id = module.db.sg_id  
+# }
 #Ingress ALB accepting traffic on 443
-resource "aws_security_group_rule" "ingress_public_https" {
-    type = "ingress"
-    from_port = 443
-    to_port =   443
-    protocol = "tcp" # All traffic
-    cidr_blocks = ["0.0.0.0/0"]
-    security_group_id = module.ingress.sg_id  
-}
-#Ingress ALB accepting traffic on 80
-resource "aws_security_group_rule" "ingress_public_http" {
-    type = "ingress"
-    from_port = 80
-    to_port =   80
-    protocol = "tcp" # All traffic
-    cidr_blocks = ["0.0.0.0/0"]
-    security_group_id = module.ingress.sg_id  
-}
-#Node is accepting  traffic from ingress
-resource "aws_security_group_rule" "node_ingress" {
-    type = "ingress"
-    from_port = 30000
-    to_port =  32768
-    protocol = "tcp" #All traffic
-    source_security_group_id = module.ingress.sg_id # source is where you are getting traffic from.
-    security_group_id = module.node.sg_id  
-}
+# resource "aws_security_group_rule" "ingress_public_https" {
+#     type = "ingress"
+#     from_port = 443
+#     to_port =   443
+#     protocol = "tcp" # All traffic
+#     cidr_blocks = ["0.0.0.0/0"]
+#     security_group_id = module.ingress.sg_id  
+# }
+# #Ingress ALB accepting traffic on 80
+# resource "aws_security_group_rule" "ingress_public_http" {
+#     type = "ingress"
+#     from_port = 80
+#     to_port =   80
+#     protocol = "tcp" # All traffic
+#     cidr_blocks = ["0.0.0.0/0"]
+#     security_group_id = module.ingress.sg_id  
+# }
+# #Node is accepting  traffic from ingress
+# resource "aws_security_group_rule" "node_ingress" {
+#     type = "ingress"
+#     from_port = 30000
+#     to_port =  32768
+#     protocol = "tcp" #All traffic
+#     source_security_group_id = module.ingress.sg_id # source is where you are getting traffic from.
+#     security_group_id = module.node.sg_id  
+# }
