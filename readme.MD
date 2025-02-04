@@ -1,7 +1,4 @@
 # Infrastructure
-
-![alt text](eks-infra.svg)
-
 Creating above infrastructure involves lot of steps, as maintained sequence we need to create
 * VPC
 * All security groups and rules
@@ -9,14 +6,12 @@ Creating above infrastructure involves lot of steps, as maintained sequence we n
 * EKS
 
 ## Sequence
-
 * (Required). create VPC first
 * (Required). create SG after VPC
 * (Required). create bastion host. It is used to connect RDS and EKS cluster.
 * (Optional). VPN, same as bastion but a windows laptop can directly connect to VPN and get access of RDS and EKS.
 
 ### Admin activities
-
 **Bastion**
 * SSH to bastion host
 * run below command and configure the credentials.
