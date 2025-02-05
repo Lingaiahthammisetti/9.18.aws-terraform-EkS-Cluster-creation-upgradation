@@ -6,8 +6,6 @@ These all Security group rules
 "cluster_node"   0 to 65535
 "node_cluster"   0 to 65535
 "node_vpc"       0 to 65535
-"db_bastion"   3306
-"db_node"      3306
 "ingress_public_https" 443
 "ingress_public_http"  80
 "node_ingress"   30000 -32768
