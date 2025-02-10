@@ -13,10 +13,14 @@ Creating above infrastructure involves lot of steps, as maintained sequence we n
 
 ### Admin activities
 **Bastion**
-* SSH to bastion host
+* Connect to Bastion Server:SSH to bastion host
 * run below command and configure the credentials.
 ```
 aws configure
+```
+* Checking connection with AWS:
+```
+aws s3 ls
 ```
 * get the kubernetes config using below command
 ```
@@ -27,10 +31,6 @@ aws eks update-kubeconfig --region us-east-1 --name expense-dev
 kubectl get nodes
 ```
 
-login to bastion server:
-aws configure
-aws s3 ls
-aws eks update-kubeconfig --region us-east-1 --name expense-dev
 
 ec2-user$cat .kube/config
 
