@@ -1,3 +1,21 @@
+# Infrastructure creation and deletion
+
+```
+for i in  10-vpc/ 20-sg/ 30-bastion 40-eks ; do cd $i; terraform init -reconfigure; cd .. ; done 
+```
+
+```
+for i in  10-vpc/ 20-sg/ 30-bastion 40-eks ; do cd $i; terraform plan; cd .. ; done 
+```
+
+```
+for i in  10-vpc/ 20-sg/ 30-bastion 40-eks ; do cd $i; terraform apply -auto-approve; cd .. ; done 
+```
+
+```
+for i in 40-eks/ 30-bastion/ 20-sg/ 10-vpc/ ; do cd $i; terraform destroy auto-approve; cd .. ; done 
+
+
 # Infrastructure
 Creating above infrastructure involves lot of steps, as maintained sequence we need to create
 * VPC
