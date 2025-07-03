@@ -1,15 +1,15 @@
 terraform {
   required_providers {
     aws = {
-      source = "hashicorp/aws"
-      version = "5.58.0"
+      source  = "hashicorp/aws"
+      version = ">= 6.0.0"
     }
   }
 backend "s3" {
-  bucket = "terraform-aws-eks-remote-state"
-  key = "terraform-aws-eks-bastion"
+  bucket = "eks-cluster-upgradation-remote-state"
+  key = "eks-cluster-upgradation-bastion"
   region = "us-east-1"
-  dynamodb_table = "terraform-aws-eks-remote-state-locking"
+  dynamodb_table = "eks-cluster-upgradation-locking"
   }
 }
 

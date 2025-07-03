@@ -6,10 +6,10 @@ terraform {
     }
   }
 backend "s3" {
-  bucket = "terraform-aws-eks-remote-state"
-  key = "terraform-aws-eks-vpc"
+  bucket = "eks-cluster-upgradation-remote-state"
+  key = "eks-cluster-upgradation-vpc"
   region = "us-east-1"
-  dynamodb_table = "terraform-aws-eks-remote-state-locking"
+  dynamodb_table = "eks-cluster-upgradation-locking"
   }
 }
 
