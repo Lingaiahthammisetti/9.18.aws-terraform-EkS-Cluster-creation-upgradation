@@ -13,7 +13,7 @@ for i in  10-vpc/ 20-sg/ 30-bastion 40-eks ; do cd $i; terraform apply -auto-app
 ```
 
 ```
-for i in 40-eks/ 30-bastion/ 20-sg/ 10-vpc/ ; do cd $i; terraform destroy auto-approve; cd .. ; done 
+for i in 40-eks/ 30-bastion/ 20-sg/ 10-vpc/ ; do cd $i; terraform destroy -auto-approve; cd .. ; done 
 ```
 
 # Infrastructure
@@ -63,3 +63,34 @@ go to eks folder and uncomment green nodes, apply them
 kubectl apply -auto-approve
 
 kubectl get nodes
+
+# What is the process EKS Cluster Upgradation with Work load shifting?
+
+1. first we need to get another node group called green.
+2. taint/cordon the green nodes, so that they should not get any pods scheduled
+kubectl cordon ip-10-0-11-111.ec2.internal (green nodes)
+kubectl cordon ip-10-0-12-90.ec2.internal (green nodes)
+
+3. now upgrade your control plane, do it from AWS console [Control plan upgradation first]
+4. upgrade green node group also 1.31 to 1.32 [Nodes upgradation second]
+5. shift the workloads from 1.31 node group to 1.32 nodegroup
+
+shift workloads to green node group
+Uncordon green nodes to allow scheduling:
+kubectl uncordon ip-10-0-11-219.ec2.internal
+kubectl uncordon ip-10-0-12-82.ec2.internal
+
+6. cordon blue nodes, cordon and uncordon are best options then taint and untaint
+kubectl cordon ip-10-0-11-219.ec2.internal
+kubectl cordon ip-10-0-12-82.ec2.internal
+
+7. uncordon green nodes
+kubectl uncordon ip-10-0-11-219.ec2.internal
+kubectl uncordon ip-10-0-12-82.ec2.internal
+
+8. drain blue nodes
+kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal
+kubectl drain --ignore-daemonsets ip-10-0-12-82.ec2.internal  getting error,because pod running
+kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal --force
+inform all stake holders, application teams. perform sanity testing
+close the activity

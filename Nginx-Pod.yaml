@@ -1,24 +1,24 @@
-# kind: Pod
-# apiVersion: v1
-# metadata:
-#   name: nginx-pod
-# spec:
-#   containers:
-#   - name: nginx
-#     image: nginx
-
-apiVersion: v1
 kind: Pod
+apiVersion: v1
 metadata:
-  name: upgrade-tester
+  name: nginx-pod
 spec:
   containers:
-    - name: test-container
-      image: busybox
-      command: ["sh", "-c", "while true; do echo $(date) >> /mnt/data/log.txt; sleep 5; done"]
-      volumeMounts:
-        - name: datavol
-          mountPath: /mnt/data
-  volumes:
-    - name: datavol
-      emptyDir: {}
+  - name: nginx
+    image: nginx
+
+# apiVersion: v1
+# kind: Pod
+# metadata:
+#   name: upgrade-tester
+# spec:
+#   containers:
+#     - name: test-container
+#       image: busybox
+#       command: ["sh", "-c", "while true; do echo $(date) >> /mnt/data/log.txt; sleep 5; done"]
+#       volumeMounts:
+#         - name: datavol
+#           mountPath: /mnt/data
+#   volumes:
+#     - name: datavol
+#       emptyDir: {}

@@ -1,32 +1,36 @@
-- name: SG Rules
-  
+# - name: SG Rules
 These all Security group rules
 "bastion_public"  22
 "cluster_bastion"  443
 "cluster_node"   0 to 65535
 "node_cluster"   0 to 65535
 "node_vpc"       0 to 65535
-#I think, these are not required here.
-# "ingress_public_https" 443
-# "ingress_public_http"  80
-# "node_ingress"   30000 -32768
+"node_ingress"   30000 -32768
+"ingress_public_http" 80
+"ingress_public_https" 443
 
-  sg:
-  - expense-dev-bastion
+#If we want to access nodes and db, then we attach
+# node_bastion 22
+# db_bastion  22
 
+  Bastion:
   - name: bastion_public
     desc: bastion accepting connections from public
     source: public 
+    port: 22
 
+  Cluster:
   - name: cluster_bastion
     desc: cluster accepting connections from bastion
     source: bastion 
+    port: 443
 
   - name: cluster_node
     desc: cluster accepting connections from node
     source: node
     port: 0 - 65535
-
+  
+  Node:
   - name: node_cluster
     desc: node accepting connections from cluster
     source: cluster
@@ -36,3 +40,20 @@ These all Security group rules
     desc: node accepting connections from vpc
     source: vpc
     port: 0 - 65535
+
+  - name: node_ingress
+    desc: node accepting connections from ingress
+    source: ingress
+    port: 30000 -32768
+
+  Ingress
+  - name: ingress_public_http
+    desc: ingress accepting connections from public_http
+    source: public_http
+    port: 80
+
+  - name: ingress_public_https
+    desc: ingress accepting connections from public_https
+    source: public_https
+    port: 443
+

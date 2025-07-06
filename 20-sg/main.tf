@@ -32,16 +32,16 @@ common_tags = var.common_tags
 sg_name = "bastion"
 }
 
-# module "ingress" {
-# source ="../../5.12.terraform-aws-securitygroup"
-# #source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
-# project_name = var.project_name
-# environment =  var.environment
-# sg_description = "SG for Ingress Controller"
-# vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for Backend Security group
-# common_tags = var.common_tags
-# sg_name = "ingress"
-# }
+module "ingress" {
+source ="../../5.12.terraform-aws-securitygroup"
+#source ="git::https://github.com/Lingaiahthammisetti/5.12.terraform-aws-securitygroup.git?ref=main"
+project_name = var.project_name
+environment =  var.environment
+sg_description = "SG for Ingress Controller"
+vpc_id =  data.aws_ssm_parameter.vpc_id.value #We are getting the vpc_id from SSM parameter for Backend Security group
+common_tags = var.common_tags
+sg_name = "ingress"
+}
 
 #Bastion can be accessed from public
 resource "aws_security_group_rule" "bastion_public" {
@@ -89,30 +89,30 @@ resource "aws_security_group_rule" "node_vpc" {
     security_group_id = module.node.sg_id  
 }
 
-# #Ingress ALB accepting traffic on 443
-# resource "aws_security_group_rule" "ingress_public_https" {
-#     type = "ingress"
-#     from_port = 443
-#     to_port =   443
-#     protocol = "tcp" # All traffic
-#     cidr_blocks = ["0.0.0.0/0"]
-#     security_group_id = module.ingress.sg_id  
-# }
-# # #Ingress ALB accepting traffic on 80
-# resource "aws_security_group_rule" "ingress_public_http" {
-#     type = "ingress"
-#     from_port = 80
-#     to_port =   80
-#     protocol = "tcp" # All traffic
-#     cidr_blocks = ["0.0.0.0/0"]
-#     security_group_id = module.ingress.sg_id  
-# }
-# # #Node is accepting  traffic from ingress
-# resource "aws_security_group_rule" "node_ingress" {
-#     type = "ingress"
-#     from_port = 30000
-#     to_port =  32768
-#     protocol = "tcp" #All traffic
-#     source_security_group_id = module.ingress.sg_id # source is where you are getting traffic from.
-#     security_group_id = module.node.sg_id  
-# }
+#Ingress ALB accepting traffic on 443
+resource "aws_security_group_rule" "ingress_public_https" {
+    type = "ingress"
+    from_port = 443
+    to_port =   443
+    protocol = "tcp" # All traffic
+    cidr_blocks = ["0.0.0.0/0"]
+    security_group_id = module.ingress.sg_id  
+}
+# #Ingress ALB accepting traffic on 80
+resource "aws_security_group_rule" "ingress_public_http" {
+    type = "ingress"
+    from_port = 80
+    to_port =   80
+    protocol = "tcp" # All traffic
+    cidr_blocks = ["0.0.0.0/0"]
+    security_group_id = module.ingress.sg_id  
+}
+# #Node is accepting  traffic from ingress
+resource "aws_security_group_rule" "node_ingress" {
+    type = "ingress"
+    from_port = 30000
+    to_port =  32768
+    protocol = "tcp" #All traffic
+    source_security_group_id = module.ingress.sg_id # source is where you are getting traffic from.
+    security_group_id = module.node.sg_id  
+}
