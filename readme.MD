@@ -29,6 +29,7 @@ Creating above infrastructure involves lot of steps, as maintained sequence we n
 * (Required). create bastion host. It is used to connect RDS and EKS cluster.
 * (Optional). VPN, same as bastion but a windows laptop can directly connect to VPN and get access of RDS and EKS.
 
+
 ### Admin activities
 **Bastion**
 * Connect to Bastion Server:SSH to bastion host
@@ -40,53 +41,57 @@ aws configure
 ```
 aws s3 ls
 ```
-* get the kubernetes config using below command
 ```
+aws sts get-caller-identity
+```
+
+* To run a pod in cluster, bastion need to get aws update kubeconfig file
+
 aws eks update-kubeconfig --region us-east-1 --name expense-dev
-```
-* Now you should be able to connect K8 cluster
-```
-kubectl get nodes
-```
+
+* What is kubeconfig file in Kubernetes?
+*  In eks, kubeconfig is used for authentication and authorization for any cluster kubenetes cluster stored in .kube/config
+* cd .kube
+* cat config
+* This is like .ssh in windows.
 
 
-ec2-user$cat .kube/config
-
-git clone https://github.com/Lingaiahthammisetti/9.3.k8s-resources.git
-cd 9.3.k8s-resources
-kubectl apply -f 02-pod.yaml
+kubectl apply -f nginx.yaml
 kubectl get pods
-kubectl get pods -o wide --> We can see in which node nginx pod running
 
-go to eks folder and uncomment green nodes, apply them
+Now Cluster is running, few applications are running inside.
 
-kubectl apply -auto-approve
+Cluster upgrade is planned
+---------------------------------
+no downtime to the existing apps but no new release and no new deployments in the upgrade time.
 
-kubectl get nodes
+For green nodes in the cluster.
+terraform plan
+terraform apply -auto-approve
 
-# What is the process EKS Cluster Upgradation with Work load shifting?
+$kubectl get nodes
+
+* Cluster upgradation process start here:
 
 1. first we need to get another node group called green.
 2. taint/cordon the green nodes, so that they should not get any pods scheduled
+kubectl taint nodes ip-10-0-11-151.ec2.internal project=expense:NoSchedule (green nodes)
+kubectl taint nodes ip-10-0-11-142.ec2.internal project=expense:NoSchedule (green nodes)
+OR
 kubectl cordon ip-10-0-11-111.ec2.internal (green nodes)
 kubectl cordon ip-10-0-12-90.ec2.internal (green nodes)
 
-3. now upgrade your control plane, do it from AWS console [Control plan upgradation first]
-4. upgrade green node group also 1.31 to 1.32 [Nodes upgradation second]
-5. shift the workloads from 1.31 node group to 1.32 nodegroup
+3. now upgrade your control plane, do it from AWS console that is 1.29 to 1.30 [Control plan upgradation first]
+4. upgrade green node group also 1.29 to 1.30 [Nodes upgradation second]
+5. shift the workloads from 1.29 node group to 1.30 means follow below two steps
 
-shift workloads to green node group
-Uncordon green nodes to allow scheduling:
-kubectl uncordon ip-10-0-11-219.ec2.internal
-kubectl uncordon ip-10-0-12-82.ec2.internal
+6. taint/cordon blue nodes.  Note: cordon and uncordon are best options then taint and untaint
+kubectl taint/cordon ip-10-0-11-219.ec2.internal (blue nodes)
+kubectl taint/cordon ip-10-0-12-82.ec2.internal (blue nodes)
 
-6. cordon blue nodes, cordon and uncordon are best options then taint and untaint
-kubectl cordon ip-10-0-11-219.ec2.internal
-kubectl cordon ip-10-0-12-82.ec2.internal
-
-7. uncordon green nodes
-kubectl uncordon ip-10-0-11-219.ec2.internal
-kubectl uncordon ip-10-0-12-82.ec2.internal
+7. untaint/uncordon green nodes
+kubectl untaint/uncordon ip-10-0-11-219.ec2.internal
+kubectl untaint/uncordon ip-10-0-12-82.ec2.internal
 
 8. drain blue nodes
 kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal
@@ -94,3 +99,25 @@ kubectl drain --ignore-daemonsets ip-10-0-12-82.ec2.internal  getting error,b
 kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal --force
 inform all stake holders, application teams. perform sanity testing
 close the activity
+
+kubectl get pods -n kube-system -o wide
+
+* Then go to terraform code and comment the blue nodes code and apply it, update 1.29 -->1.30 
+ * We will take one hour download to upgrade the platform, not for the applications.
+ * inform all stake holders, application teams. perform sanity testing. close the activity
+
+* Pods vs DaemonSet:
+* Pods (Deployment/StatefulSet) for upgrading clusters and shifting workloads.
+* DaemonSet only for node-specific tasks that must run on every node.
+
+* Differences on Taint and Cordon:
+* Cordon is best option than taint, if someone applied toleration on nodes, upgradation will not work.
+* Cordon: Stops new pods from being scheduled on a node. Existing pods stay.
+* Taint: Blocks pods unless they tolerate the taint. Can also evict existing pods (with NoExecute).
+* Cordon = temporary block
+* Taint = rule-based filtering
+
+* Note: Once cluster is upgraded, then we upgrade green nodes 
+* rolling update -->if workload running in this nodes, we will do rolling update.
+* force update   -->if no workload running in this nodes, we will do force update.
+
