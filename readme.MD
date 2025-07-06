@@ -50,10 +50,10 @@ aws sts get-caller-identity
 aws eks update-kubeconfig --region us-east-1 --name expense-dev
 
 * What is kubeconfig file in Kubernetes?
-*  In eks, kubeconfig is used for authentication and authorization for any cluster kubenetes cluster stored in .kube/config
-* cd .kube
-* cat config
-* This is like .ssh in windows.
+    *  In eks, kubeconfig is used for authentication and authorization for any cluster kubenetes cluster stored in .kube/config
+    * cd .kube
+    * cat config
+    * This is like .ssh in windows.
 
 
 kubectl apply -f nginx.yaml
@@ -61,8 +61,8 @@ kubectl get pods
 
 Now Cluster is running, few applications are running inside.
 
-Cluster upgrade is planned
----------------------------------
+# Cluster upgrade is planned
+
 no downtime to the existing apps but no new release and no new deployments in the upgrade time.
 
 For green nodes in the cluster.
@@ -71,7 +71,7 @@ terraform apply -auto-approve
 
 $kubectl get nodes
 
-* Cluster upgradation process start here:
+# Cluster upgradation process start here:
 
 1. first we need to get another node group called green.
 2. taint/cordon the green nodes, so that they should not get any pods scheduled
@@ -103,21 +103,20 @@ close the activity
 kubectl get pods -n kube-system -o wide
 
 * Then go to terraform code and comment the blue nodes code and apply it, update 1.29 -->1.30 
- * We will take one hour download to upgrade the platform, not for the applications.
- * inform all stake holders, application teams. perform sanity testing. close the activity
+    * We will take one hour download to upgrade the platform, not for the applications.
+    * inform all stake holders, application teams. perform sanity testing. close the activity
 
 * Pods vs DaemonSet:
-* Pods (Deployment/StatefulSet) for upgrading clusters and shifting workloads.
-* DaemonSet only for node-specific tasks that must run on every node.
+    * Pods (Deployment/StatefulSet) for upgrading clusters and shifting workloads.
+    * DaemonSet only for node-specific tasks that must run on every node.
 
 * Differences on Taint and Cordon:
-* Cordon is best option than taint, if someone applied toleration on nodes, upgradation will not work.
-* Cordon: Stops new pods from being scheduled on a node. Existing pods stay.
-* Taint: Blocks pods unless they tolerate the taint. Can also evict existing pods (with NoExecute).
-* Cordon = temporary block
-* Taint = rule-based filtering
+    * Cordon is best option than taint, if someone applied toleration on nodes, upgradation will not work.
+    * Cordon: Stops new pods from being scheduled on a node. Existing pods stay.
+    * Taint: Blocks pods unless they tolerate the taint. Can also evict existing pods (with NoExecute).
+    * Cordon = temporary block
+    * Taint = rule-based filtering
 
 * Note: Once cluster is upgraded, then we upgrade green nodes 
-* rolling update -->if workload running in this nodes, we will do rolling update.
-* force update   -->if no workload running in this nodes, we will do force update.
-
+    * rolling update -->if workload running in this nodes, we will do rolling update.
+    * force update   -->if no workload running in this nodes, we will do force update.
