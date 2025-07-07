@@ -58,9 +58,12 @@ aws eks update-kubeconfig --region us-east-1 --name expense-dev
     * cat config
     * This is like .ssh in windows.
 
-
+```
 kubectl apply -f nginx.yaml
+```
+```
 kubectl get pods
+```
 
 Now Cluster is running, few applications are running inside.
 
