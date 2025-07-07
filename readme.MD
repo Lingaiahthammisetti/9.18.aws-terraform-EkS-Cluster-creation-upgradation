@@ -112,9 +112,10 @@ kubectl get pods -n kube-system -o wide
     * We will take one hour download to upgrade the platform, not for the applications.
     * inform all stake holders, application teams. perform sanity testing. close the activity
 
-* Pods vs DaemonSet:
-    * Pods (Deployment/StatefulSet) for upgrading clusters and shifting workloads.
-    * DaemonSet only for node-specific tasks that must run on every node.
+* differences: Pod, Deployment, Daemonset
+    * Pod: The basic unit in Kubernetes — runs one or more containers. Not self-healing. Best for testing or temporary tasks.
+    * Deployment: Manages multiple copies of a pod. Automatically replaces failed pods and supports zero-downtime updates. Ideal for running scalable apps.
+    * DaemonSet: Runs one pod per node, typically for background tasks like logging or monitoring. Used for system-level services, not app scaling.
 
 * Differences on Taint and Cordon:
     * Cordon is best option than taint, if someone applied toleration on nodes, upgradation will not work.
