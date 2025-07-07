@@ -64,6 +64,7 @@ kubectl apply -f nginx.yaml
 ```
 kubectl get pods
 ```
+* Note: pod is not used in EKS upgradation. We can use deployment, if we close pods in one node, it will be pulled in another node. so deployment is the best choice.
 
 Now Cluster is running, few applications are running inside.
 
@@ -100,13 +101,25 @@ kubectl get nodes
     * kubectl untaint/uncordon ip-10-0-12-82.ec2.internal
 
 8. drain blue nodes
+   * USED for pods 
     * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal
     * kubectl drain --ignore-daemonsets ip-10-0-12-82.ec2.internal  getting error,because pod running
     * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal --force
-inform all stake holders, application teams. perform sanity testing
-close the activity
 
+  * USED in Deployment:
+    * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal (blue nodes only)
+    * kubectl drain --ignore-daemonsets ip-10-0-13-342.ec2.internal (blue nodes only)
+
+```
+kubectl get nodes
+```
+* Note: Please check pods moved from blue nodes to green nodes. Deployment completed.
+```
 kubectl get pods -n kube-system -o wide
+```
+* Note: upgrade the blue nodes from 1.29 to 1.30 version and comment the blue nodes in terraform tf file.
+* inform all stake holders, application teams. perform sanity testing and close the activity
+
 
 * Then go to terraform code and comment the blue nodes code and apply it, update 1.29 -->1.30 
     * We will take one hour download to upgrade the platform, not for the applications.
