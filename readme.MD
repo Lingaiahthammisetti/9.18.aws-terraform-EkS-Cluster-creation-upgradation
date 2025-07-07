@@ -81,28 +81,28 @@ kubectl get nodes
 
 1. first we need to get another node group called green.
 2. taint/cordon the green nodes, so that they should not get any pods scheduled
-kubectl taint nodes ip-10-0-11-151.ec2.internal project=expense:NoSchedule (green nodes)
-kubectl taint nodes ip-10-0-11-142.ec2.internal project=expense:NoSchedule (green nodes)
-OR
-kubectl cordon ip-10-0-11-111.ec2.internal (green nodes)
-kubectl cordon ip-10-0-12-90.ec2.internal (green nodes)
+    * kubectl taint nodes ip-10-0-11-151.ec2.internal project=expense:NoSchedule (green nodes)
+    * kubectl taint nodes ip-10-0-11-142.ec2.internal project=expense:NoSchedule (green nodes)
+    OR
+    * kubectl cordon ip-10-0-11-111.ec2.internal (green nodes)
+    * kubectl cordon ip-10-0-12-90.ec2.internal (green nodes)
 
 3. now upgrade your control plane, do it from AWS console that is 1.29 to 1.30 [Control plan upgradation first]
 4. upgrade green node group also 1.29 to 1.30 [Nodes upgradation second]
 5. shift the workloads from 1.29 node group to 1.30 means follow below two steps
 
 6. taint/cordon blue nodes.  Note: cordon and uncordon are best options then taint and untaint
-kubectl taint/cordon ip-10-0-11-219.ec2.internal (blue nodes)
-kubectl taint/cordon ip-10-0-12-82.ec2.internal (blue nodes)
+    * kubectl taint/cordon ip-10-0-11-219.ec2.internal (blue nodes)
+    * kubectl taint/cordon ip-10-0-12-82.ec2.internal (blue nodes)
 
 7. untaint/uncordon green nodes
-kubectl untaint/uncordon ip-10-0-11-219.ec2.internal
-kubectl untaint/uncordon ip-10-0-12-82.ec2.internal
+    * kubectl untaint/uncordon ip-10-0-11-219.ec2.internal
+    * kubectl untaint/uncordon ip-10-0-12-82.ec2.internal
 
 8. drain blue nodes
-kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal
-kubectl drain --ignore-daemonsets ip-10-0-12-82.ec2.internal  getting error,because pod running
-kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal --force
+    * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal
+    * kubectl drain --ignore-daemonsets ip-10-0-12-82.ec2.internal  getting error,because pod running
+    * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal --force
 inform all stake holders, application teams. perform sanity testing
 close the activity
 
