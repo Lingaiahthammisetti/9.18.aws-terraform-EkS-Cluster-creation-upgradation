@@ -101,12 +101,12 @@ kubectl get nodes
     * kubectl untaint/uncordon ip-10-0-12-82.ec2.internal
 
 8. drain blue nodes
-   * USED for pods 
+  * USED for pods 
     * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal
     * kubectl drain --ignore-daemonsets ip-10-0-12-82.ec2.internal  getting error,because pod running
     * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal --force
 
-  * USED in Deployment:
+  * USED for Deployment:
     * kubectl drain --ignore-daemonsets ip-10-0-11-219.ec2.internal (blue nodes only)
     * kubectl drain --ignore-daemonsets ip-10-0-13-342.ec2.internal (blue nodes only)
 
