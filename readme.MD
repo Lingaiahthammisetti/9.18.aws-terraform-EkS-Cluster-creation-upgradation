@@ -74,9 +74,9 @@ no downtime to the existing apps but no new release and no new deployments in th
 For green nodes in the cluster.
 terraform plan
 terraform apply -auto-approve
-
-$kubectl get nodes
-
+```
+kubectl get nodes
+```
 # Cluster upgradation process start here:
 
 1. first we need to get another node group called green.
