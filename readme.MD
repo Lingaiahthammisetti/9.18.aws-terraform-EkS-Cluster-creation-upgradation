@@ -44,11 +44,14 @@ aws s3 ls
 ```
 aws sts get-caller-identity
 ```
+```
+kubectl get nodes
+```
 
 * To run a pod in cluster, bastion need to get aws update kubeconfig file
-
+```
 aws eks update-kubeconfig --region us-east-1 --name expense-dev
-
+```
 * What is kubeconfig file in Kubernetes?
     *  In eks, kubeconfig is used for authentication and authorization for any cluster kubenetes cluster stored in .kube/config
     * cd .kube
