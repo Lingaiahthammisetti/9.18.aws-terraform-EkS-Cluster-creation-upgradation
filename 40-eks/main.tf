@@ -9,7 +9,7 @@ module "eks" {
     source = "terraform-aws-modules/eks/aws"
     version = "~> 20.0"
     cluster_name = "${var.project_name}-${var.environment}"
-    cluster_version = "1.31"
+    cluster_version = "1.32"
 
     #it should be false in PROD environment
     cluster_endpoint_public_access = false
